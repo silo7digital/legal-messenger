@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PSP Legal Messenger Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">PSP</div>
+        <div>
+          <strong>LEGAL MESSENGER</strong>
+          <span>Demo platform</span>
+        </div>
+      </div>
+
+      <nav>
+        <button class="nav-btn active" data-view="client">
+          <span>◈</span> Client
+        </button>
+        <button class="nav-btn" data-view="rider">
+          <span>↗</span> Rider
+        </button>
+        <button class="nav-btn" data-view="admin">
+          <span>▦</span> Operations
+        </button>
+      </nav>
+
+      <div class="side-card">
+        <div class="eyebrow">LIVE NETWORK</div>
+        <div class="network-row"><span class="dot green"></span><strong>6 riders online</strong></div>
+        <div class="network-row"><span class="dot"></span>4 jobs active</div>
+        <div class="network-row"><span class="dot"></span>2 bikes charging</div>
+      </div>
+
+      <div class="demo-note">Prototype only — tracking and payments are simulated for presentation purposes.</div>
+    </aside>
+
+    <main class="main">
+      <section class="view active" id="client-view">
+        <header class="topbar">
+          <div>
+            <div class="eyebrow">CLIENT PORTAL</div>
+            <h1>Move legal documents without the follow-up calls.</h1>
+          </div>
+          <div class="avatar">DR</div>
+        </header>
+
+        <div class="hero-grid">
+          <section class="panel booking-card">
+            <div class="panel-header">
+              <div>
+                <div class="eyebrow">NEW DELIVERY</div>
+                <h2>Book a court messenger</h2>
+              </div>
+              <span class="status-pill">Gauteng demo</span>
+            </div>
+
+            <div class="form-grid">
+              <label>
+                Pickup
+                <input id="pickup" value="Bowmans, Sandton" />
+              </label>
+              <label>
+                Destination
+                <input id="dropoff" value="Johannesburg High Court" />
+              </label>
+              <label>
+                Matter reference
+                <input id="matter" value="MAT-2026-1842" />
+              </label>
+              <label>
+                Document type
+                <select id="doctype">
+                  <option>Notice of Motion</option>
+                  <option>Affidavit</option>
+                  <option>Original signed documents</option>
+                  <option>Court filing bundle</option>
+                  <option>Correspondence</option>
+                </select>
+              </label>
+              <label>
+                Priority
+                <select id="priority">
+                  <option value="standard">Standard — Same day</option>
+                  <option value="urgent" selected>Urgent — Next available rider</option>
+                  <option value="scheduled">Scheduled</option>
+                </select>
+              </label>
+              <label>
+                Billing
+                <select id="billing">
+                  <option>Corporate account</option>
+                  <option>Card payment</option>
+                  <option>Instant EFT</option>
+                </select>
+              </label>
+              <label class="full">
+                Instructions
+                <textarea id="instructions">File with Registrar and return stamped copy.</textarea>
+              </label>
+            </div>
+
+            <div class="quote-row">
+              <div>
+                <span>Estimated price</span>
+                <strong id="quote">R 348.00</strong>
+              </div>
+              <button class="primary" id="bookJob">BOOK & DISPATCH</button>
+            </div>
+          </section>
+
+          <section class="panel trust-panel">
+            <div class="eyebrow">CHAIN OF CUSTODY</div>
+            <h2>Every handoff creates a record.</h2>
+            <div class="custody-list">
+              <div><span>01</span><p><strong>GPS timestamp</strong><br>Pickup location verified.</p></div>
+              <div><span>02</span><p><strong>Rider identity</strong><br>Assigned messenger logged.</p></div>
+              <div><span>03</span><p><strong>Proof uploaded</strong><br>Stamped copy, receipt or signature.</p></div>
+              <div><span>04</span><p><strong>Delivery record</strong><br>Downloadable job history.</p></div>
+            </div>
+          </section>
+        </div>
+
+        <section class="panel tracking-panel hidden" id="trackingPanel">
+          <div class="panel-header">
+            <div>
+              <div class="eyebrow">LIVE DELIVERY</div>
+              <h2 id="jobTitle">PSP-000184 · MAT-2026-1842</h2>
+            </div>
+            <span class="status-pill live">LIVE</span>
+          </div>
+
+          <div class="tracking-grid">
+            <div class="map">
+              <div class="road road-a"></div>
+              <div class="road road-b"></div>
+              <div class="road road-c"></div>
+              <div class="pin pickup-pin">A</div>
+              <div class="pin drop-pin">B</div>
+              <div class="bike" id="bike">⚡</div>
+              <div class="map-label label-a">Sandton</div>
+              <div class="map-label label-b">High Court</div>
+            </div>
+
+            <div class="delivery-card">
+              <div class="rider">
+                <div class="rider-photo">TM</div>
+                <div>
+                  <span>Your messenger</span>
+                  <strong>Thabo Mokoena</strong>
+                  <small>Bike EM-014 · 82% battery</small>
+                </div>
+              </div>
+
+              <div class="timeline" id="timeline">
+                <div class="timeline-item complete"><span></span><div><strong>Booked</strong><small>13:36</small></div></div>
+                <div class="timeline-item active"><span></span><div><strong>Rider assigned</strong><small>Thabo is heading to pickup</small></div></div>
+                <div class="timeline-item"><span></span><div><strong>Documents collected</strong><small>Awaiting collection</small></div></div>
+                <div class="timeline-item"><span></span><div><strong>At court</strong><small>Pending</small></div></div>
+                <div class="timeline-item"><span></span><div><strong>Filed & complete</strong><small>Proof will appear here</small></div></div>
+              </div>
+
+              <button class="secondary" id="advanceDemo">ADVANCE DEMO STATUS</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel proof-panel hidden" id="proofPanel">
+          <div>
+            <div class="eyebrow">PROOF OF DELIVERY</div>
+            <h2>Delivery completed successfully.</h2>
+            <p>Stamped filing proof and the full chain-of-custody record are now attached to this matter.</p>
+          </div>
+          <div class="proof-card">
+            <div class="stamp">FILED<br><span>JHB HIGH COURT</span></div>
+            <div>
+              <strong>PSP-000184</strong>
+              <p>Completed 14:07</p>
+              <p>Johannesburg High Court</p>
+            </div>
+            <button class="secondary">DOWNLOAD RECORD</button>
+          </div>
+        </section>
+      </section>
+
+      <section class="view" id="rider-view">
+        <header class="topbar">
+          <div>
+            <div class="eyebrow">RIDER APP</div>
+            <h1>Next job.</h1>
+          </div>
+          <span class="status-pill live">ONLINE</span>
+        </header>
+
+        <div class="mobile-frame">
+          <div class="phone-top">
+            <div>
+              <span class="eyebrow">ASSIGNED DELIVERY</span>
+              <h2>PSP-000184</h2>
+            </div>
+            <span class="battery">82%</span>
+          </div>
+          <div class="route-line"><span>A</span><div></div><span>B</span></div>
+          <div class="route-copy">
+            <div><small>PICKUP</small><strong>Bowmans, Sandton</strong></div>
+            <div><small>DELIVER</small><strong>Johannesburg High Court</strong></div>
+          </div>
+          <div class="job-meta">
+            <div><small>DEADLINE</small><strong>14:30</strong></div>
+            <div><small>PRIORITY</small><strong>URGENT</strong></div>
+            <div><small>DISTANCE</small><strong>13.8 km</strong></div>
+          </div>
+          <div class="instruction-box">
+            <small>INSTRUCTIONS</small>
+            <p>File with Registrar and return stamped copy.</p>
+          </div>
+          <button class="primary full-btn" id="riderAction">ARRIVED AT PICKUP</button>
+          <button class="secondary full-btn">OPEN NAVIGATION</button>
+        </div>
+      </section>
+
+      <section class="view" id="admin-view">
+        <header class="topbar">
+          <div>
+            <div class="eyebrow">OPERATIONS CONTROL</div>
+            <h1>Legal logistics at a glance.</h1>
+          </div>
+          <span class="status-pill">Sunday · 13:36</span>
+        </header>
+
+        <div class="metrics">
+          <div class="metric"><span>ACTIVE JOBS</span><strong>4</strong><small>+2 this hour</small></div>
+          <div class="metric"><span>RIDERS ONLINE</span><strong>6</strong><small>2 available now</small></div>
+          <div class="metric"><span>COMPLETED TODAY</span><strong>27</strong><small>96% on time</small></div>
+          <div class="metric"><span>REVENUE TODAY</span><strong>R 8,940</strong><small>Demo data</small></div>
+        </div>
+
+        <div class="admin-grid">
+          <section class="panel">
+            <div class="panel-header">
+              <div><div class="eyebrow">FLEET MAP</div><h2>Live rider positions</h2></div>
+            </div>
+            <div class="map admin-map">
+              <div class="road road-a"></div><div class="road road-b"></div><div class="road road-c"></div>
+              <div class="fleet-marker fm1">1</div>
+              <div class="fleet-marker fm2">2</div>
+              <div class="fleet-marker fm3">3</div>
+              <div class="fleet-marker fm4">4</div>
+              <div class="fleet-marker fm5">5</div>
+              <div class="fleet-marker fm6">6</div>
+              <div class="map-label label-a">Sandton</div><div class="map-label label-b">JHB CBD</div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header">
+              <div><div class="eyebrow">ACTIVE JOBS</div><h2>Dispatch queue</h2></div>
+            </div>
+            <div class="job-list">
+              <div class="job-row urgent"><span>PSP-184</span><strong>Bowmans → High Court</strong><small>Thabo · En route</small></div>
+              <div class="job-row"><span>PSP-185</span><strong>Rosebank → Masters Office</strong><small>Anele · Collecting</small></div>
+              <div class="job-row"><span>PSP-186</span><strong>Sandton → Pretoria High Court</strong><small>Kabelo · Assigned</small></div>
+              <div class="job-row"><span>PSP-187</span><strong>Braamfontein → Counsel</strong><small>Unassigned</small></div>
+            </div>
+          </section>
+        </div>
+
+        <section class="panel fleet-table">
+          <div class="panel-header">
+            <div><div class="eyebrow">FLEET STATUS</div><h2>Motorcycles & riders</h2></div>
+          </div>
+          <div class="table">
+            <div class="tr head"><span>RIDER</span><span>BIKE</span><span>STATUS</span><span>BATTERY</span><span>AREA</span></div>
+            <div class="tr"><span>Thabo Mokoena</span><span>EM-014</span><span><b class="tag blue">Delivering</b></span><span>82%</span><span>Sandton</span></div>
+            <div class="tr"><span>Anele Dube</span><span>EM-019</span><span><b class="tag amber">Collecting</b></span><span>71%</span><span>Rosebank</span></div>
+            <div class="tr"><span>Kabelo Ndlovu</span><span>EM-022</span><span><b class="tag green">Available</b></span><span>94%</span><span>Midrand</span></div>
+            <div class="tr"><span>Sam Nkosi</span><span>EM-031</span><span><b class="tag grey">Charging</b></span><span>31%</span><span>Johannesburg CBD</span></div>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
