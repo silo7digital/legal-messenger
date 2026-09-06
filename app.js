@@ -1,82 +1,22 @@
-const navButtons = document.querySelectorAll('.nav-btn');
-const views = document.querySelectorAll('.view');
+const navButtons=document.querySelectorAll('.nav-btn');const views=document.querySelectorAll('.view');navButtons.forEach(btn=>{btn.addEventListener('click',()=>{navButtons.forEach(b=>b.classList.remove('active'));views.forEach(v=>v.classList.remove('active'));btn.classList.add('active');document.getElementById(`${btn.dataset.view}-view`).classList.add('active');window.scrollTo({top:0,behavior:'smooth'})})});
 
-navButtons.forEach(btn => {
-  btn.addEventListener('click', () => {
-    navButtons.forEach(b => b.classList.remove('active'));
-    views.forEach(v => v.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById(`${btn.dataset.view}-view`).classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-});
+const demoAccount={plan:'Professional',tier:'Tier 2',included:60,used:42,urgentIncluded:12,urgentUsed:8,payg:{standard:245,urgent:348,scheduled:210}};
+const priority=document.getElementById('priority'),quote=document.getElementById('quote'),quoteLabel=document.getElementById('quoteLabel'),quoteSub=document.getElementById('quoteSub'),billingCheck=document.getElementById('billingCheck'),billingLabel=document.getElementById('billingLabel'),billingHeadline=document.getElementById('billingHeadline'),billingDetail=document.getElementById('billingDetail');
+function money(v){return `R ${Number(v).toFixed(2)}`}
+function getBilling(){const p=priority.value;const hasVolume=demoAccount.used<demoAccount.included;const hasUrgent=demoAccount.urgentUsed<demoAccount.urgentIncluded;let included=hasVolume;if(p==='urgent'&&!hasUrgent)included=false;return{included,price:included?0:demoAccount.payg[p],priority:p}}
+function refreshBilling(){const b=getBilling();if(b.included){billingCheck.classList.remove('payg');billingLabel.textContent=`INCLUDED IN ${demoAccount.plan.toUpperCase()} PLAN`;billingHeadline.textContent='No additional delivery charge';billingDetail.textContent=b.priority==='urgent'?`Uses 1 of your ${demoAccount.included-demoAccount.used} remaining monthly deliveries and 1 urgent allocation.`:`Uses 1 of your ${demoAccount.included-demoAccount.used} remaining monthly deliveries.`;quote.textContent='R 0.00';quoteLabel.textContent='Amount due now';quoteSub.textContent='Covered by monthly plan'}else{billingCheck.classList.add('payg');billingLabel.textContent='PAY AS YOU GO';billingHeadline.textContent='Plan allocation exceeded';billingDetail.textContent='This delivery will be billed separately at the PAYG rate.';quote.textContent=money(b.price);quoteLabel.textContent='PAYG delivery charge';quoteSub.textContent='Billed in addition to monthly plan'}}
+priority.addEventListener('change',refreshBilling);refreshBilling();
 
-const priority = document.getElementById('priority');
-const quote = document.getElementById('quote');
+document.getElementById('scrollToBooking').addEventListener('click',()=>document.getElementById('bookingAnchor').scrollIntoView({behavior:'smooth'}));
+document.getElementById('showPlans').addEventListener('click',e=>{const g=document.getElementById('planGrid');g.classList.toggle('hidden');e.currentTarget.textContent=g.classList.contains('hidden')?'VIEW PLAN STRUCTURE':'HIDE PLAN STRUCTURE'});
 
-priority.addEventListener('change', () => {
-  const prices = {
-    standard: 'R 245.00',
-    urgent: 'R 348.00',
-    scheduled: 'R 210.00'
-  };
-  quote.textContent = prices[priority.value];
-});
+const reviewPanel=document.getElementById('reviewPanel'),dispatchPanel=document.getElementById('dispatchPanel'),trackingPanel=document.getElementById('trackingPanel'),proofPanel=document.getElementById('proofPanel'),matter=document.getElementById('matter'),pickup=document.getElementById('pickup'),dropoff=document.getElementById('dropoff'),jobTitle=document.getElementById('jobTitle');
+document.getElementById('bookJob').addEventListener('click',()=>{const b=getBilling();document.getElementById('reviewPickup').textContent=pickup.value;document.getElementById('reviewDropoff').textContent=dropoff.value;document.getElementById('reviewMatter').textContent=matter.value||'MAT-2026-1842';document.getElementById('reviewPriority').textContent=priority.options[priority.selectedIndex].text.split(' — ')[0];document.getElementById('reviewBilling').textContent=b.included?`${demoAccount.plan} plan`:'PAYG overage';document.getElementById('reviewAmount').textContent=money(b.price);document.getElementById('reviewCharge').textContent=b.included?'PLAN DELIVERY':'PAYG DELIVERY';reviewPanel.classList.remove('hidden');reviewPanel.scrollIntoView({behavior:'smooth',block:'center'})});
+document.getElementById('editBooking').addEventListener('click',()=>{reviewPanel.classList.add('hidden');document.getElementById('bookingAnchor').scrollIntoView({behavior:'smooth'})});
+document.getElementById('confirmBooking').addEventListener('click',()=>{const b=getBilling();if(b.included){demoAccount.used++;if(b.priority==='urgent')demoAccount.urgentUsed++;document.getElementById('usedCount').textContent=demoAccount.used;document.getElementById('urgentUsed').textContent=demoAccount.urgentUsed;document.getElementById('monthJobs').textContent=demoAccount.used;document.getElementById('usageBar').style.width=`${Math.min(100,demoAccount.used/demoAccount.included*100)}%`;document.getElementById('planMessage').textContent=`${demoAccount.included-demoAccount.used} included deliveries remain this month. Additional jobs automatically move to PAYG.`}reviewPanel.classList.add('hidden');dispatchPanel.classList.remove('hidden');dispatchPanel.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>{dispatchPanel.classList.add('hidden');trackingPanel.classList.remove('hidden');jobTitle.textContent=`PSP-000184 · ${matter.value||'MAT-2026-1842'}`;trackingPanel.scrollIntoView({behavior:'smooth',block:'start'})},1600)});
 
-const booking = document.getElementById('bookJob');
-const trackingPanel = document.getElementById('trackingPanel');
-const proofPanel = document.getElementById('proofPanel');
-const matter = document.getElementById('matter');
-const jobTitle = document.getElementById('jobTitle');
+let stage=0;const bike=document.getElementById('bike'),timeline=document.querySelectorAll('.timeline-item'),advance=document.getElementById('advanceDemo');const stages=[{left:'26%',top:'58%',text:'DOCUMENTS COLLECTED'},{left:'49%',top:'43%',text:'EN ROUTE TO COURT'},{left:'72%',top:'26%',text:'ARRIVED AT COURT'},{left:'80%',top:'21%',text:'FILED & COMPLETE'}];advance.addEventListener('click',()=>{if(stage>=stages.length){stage=0;proofPanel.classList.add('hidden');timeline.forEach((item,index)=>{item.classList.remove('complete','active');if(index===0)item.classList.add('complete');if(index===1)item.classList.add('active')});bike.style.left='26%';bike.style.top='58%';advance.textContent='ADVANCE DEMO STATUS';return}const s=stages[stage];bike.style.left=s.left;bike.style.top=s.top;timeline.forEach((item,index)=>{item.classList.remove('active');if(index<=stage+1)item.classList.add('complete')});if(stage+2<timeline.length)timeline[stage+2].classList.add('active');advance.textContent=s.text;if(stage===3){proofPanel.classList.remove('hidden');advance.textContent='RESTART DEMO';proofPanel.scrollIntoView({behavior:'smooth',block:'center'})}stage++});
 
-booking.addEventListener('click', () => {
-  trackingPanel.classList.remove('hidden');
-  proofPanel.classList.add('hidden');
-  jobTitle.textContent = `PSP-000184 · ${matter.value || 'MAT-2026-1842'}`;
-  trackingPanel.scrollIntoView({behavior:'smooth', block:'start'});
-});
+document.getElementById('downloadRecord').addEventListener('click',()=>{const record=`PSP LEGAL MESSENGER — DELIVERY RECORD\n\nJob: PSP-000184\nMatter: ${matter.value}\nPickup: ${pickup.value}\nDestination: ${dropoff.value}\nMessenger: Thabo Mokoena\nBike: EM-014\nStatus: Filed & Complete\nCompleted: 14:07\nProof: Stamped filing copy recorded\n`;const blob=new Blob([record],{type:'text/plain'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='PSP-000184-delivery-record.txt';a.click();URL.revokeObjectURL(url)});
 
-let stage = 0;
-const bike = document.getElementById('bike');
-const timeline = document.querySelectorAll('.timeline-item');
-const advance = document.getElementById('advanceDemo');
-
-const stages = [
-  { left:'26%', top:'58%', text:'DOCUMENTS COLLECTED' },
-  { left:'49%', top:'43%', text:'EN ROUTE TO COURT' },
-  { left:'72%', top:'26%', text:'ARRIVED AT COURT' },
-  { left:'80%', top:'21%', text:'FILED & COMPLETE' }
-];
-
-advance.addEventListener('click', () => {
-  if(stage >= stages.length) stage = 0;
-  const s = stages[stage];
-  bike.style.left = s.left;
-  bike.style.top = s.top;
-
-  timeline.forEach((item, index) => {
-    item.classList.remove('active');
-    if(index <= stage + 1) item.classList.add('complete');
-  });
-
-  if(stage + 2 < timeline.length) {
-    timeline[stage + 2].classList.add('active');
-  }
-
-  advance.textContent = s.text;
-
-  if(stage === 3){
-    proofPanel.classList.remove('hidden');
-    advance.textContent = 'RESTART DEMO';
-    proofPanel.scrollIntoView({behavior:'smooth', block:'center'});
-  }
-  stage++;
-});
-
-const riderAction = document.getElementById('riderAction');
-const riderStates = ['DOCUMENTS COLLECTED','ARRIVED AT COURT','UPLOAD FILING PROOF','COMPLETE JOB','JOB COMPLETE'];
-let riderStage = 0;
-riderAction.addEventListener('click',()=>{
-  riderAction.textContent = riderStates[Math.min(riderStage, riderStates.length-1)];
-  riderStage++;
-});
+const riderAction=document.getElementById('riderAction'),riderStates=['DOCUMENTS COLLECTED','ARRIVED AT COURT','UPLOAD FILING PROOF','COMPLETE JOB','JOB COMPLETE'];let riderStage=0;riderAction.addEventListener('click',()=>{riderAction.textContent=riderStates[Math.min(riderStage,riderStates.length-1)];riderStage++});
